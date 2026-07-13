@@ -1,7 +1,8 @@
-const express = require("express");
-const cors = require("cors");
-
-const authRoutes = require("./routes/authRoutes");
+import express from "express";
+import cors from "cors";
+import authRoutes from "./routes/authRoutes.js";
+import newsletterRoutes from "./routes/newsletterRoutes.js";
+import volunteerRoutes from "./routes/volunteerRoutes.js";
 
 
 const app = express();
@@ -17,6 +18,9 @@ app.use(
     "/api/auth",
     authRoutes
 );
+
+app.use("/api/volunteer-applications", volunteerRoutes);
+app.use("/api/newsletter", newsletterRoutes);
 
 
 
@@ -39,4 +43,4 @@ app.get("/api/health", (req, res) => {
 });
 
 
-module.exports = app;
+export default app;

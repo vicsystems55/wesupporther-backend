@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 model Admin {
@@ -27,4 +27,90 @@ model Admin {
   updatedAt DateTime @updatedAt
 
   @@map("admins")
+}
+
+model VolunteerApplication {
+  id Int @id @default(autoincrement())
+
+  // Personal Information
+  fullName String
+  email    String
+  phone    String
+
+  dob DateTime?
+
+  gender String?
+
+  nationality String?
+
+  occupation String?
+
+  address String?
+
+  // Emergency Contact
+  emergencyName String?
+
+  emergencyPhone String?
+
+  // Volunteer Role
+  position String?
+
+  department Json @default("[]")
+
+  duration String?
+
+  arrangement String?
+
+  startDate DateTime?
+
+  supervisor String?
+
+  // Agreements
+  agreements Json @default("[]")
+
+  mediaConsent Boolean @default(false)
+
+  volunteerName String?
+
+  signature String?
+
+  declarationDate DateTime?
+
+  // Admin
+  status String @default("Pending")
+
+  approvedBy String?
+
+  approverPosition String?
+
+  approverSignature String?
+
+  approvalDate DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+enum NewsletterStatus {
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+model NewsletterSubscriber {
+  id Int @id @default(autoincrement())
+
+  fullName String?
+  email    String @unique
+
+  status         NewsletterStatus @default(ACTIVE)
+  subscribedAt   DateTime         @default(now())
+  unsubscribedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@map("newsletter_subscribers")
 }
