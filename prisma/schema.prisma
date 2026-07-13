@@ -91,6 +91,10 @@ model VolunteerApplication {
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([email])
+  @@map("volunteer_applications")
 }
 
 enum NewsletterStatus {
@@ -102,7 +106,7 @@ model NewsletterSubscriber {
   id Int @id @default(autoincrement())
 
   fullName String?
-  email    String @unique
+  email    String  @unique
 
   status         NewsletterStatus @default(ACTIVE)
   subscribedAt   DateTime         @default(now())
@@ -111,6 +115,6 @@ model NewsletterSubscriber {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([status])
+  @@index([status, subscribedAt])
   @@map("newsletter_subscribers")
 }

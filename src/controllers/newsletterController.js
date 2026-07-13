@@ -28,7 +28,10 @@ export const createNewsletterSubscription = async (req, res) => {
     });
 
     if (existingSubscriber?.status === "ACTIVE") {
-      return res.status(409).json({ message: "Email is already subscribed" });
+      return res.status(200).json({
+        message: "Email is already subscribed",
+        subscriber: existingSubscriber,
+      });
     }
 
     const subscriber = existingSubscriber
@@ -53,7 +56,13 @@ export const createNewsletterSubscription = async (req, res) => {
     });
   } catch (error) {
     if (error?.code === "P2002") {
-      return res.status(409).json({ message: "Email is already subscribed" });
+      const email = typeof req.body?.email === "string"
+        ? req.body.email.trim().toLowerCase()
+        : "";
+      const subscriber = email
+        ? await prisma.newsletterSubscriber.findUnique({ where: { email } })
+        : null;
+      return res.status(200).json({ message: "Email is already subscribed", subscriber });
     }
 
     console.error("Failed to create newsletter subscription:", error);
