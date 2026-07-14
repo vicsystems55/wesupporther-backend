@@ -1,4 +1,5 @@
 import prisma from "../config/database.js";
+import { sendVolunteerApplicationNotification } from "../services/emailService.js";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -103,6 +104,15 @@ export const createVolunteerApplication = async (req, res) => {
         declarationDate: dates.declarationDate,
       },
     });
+
+    try {
+      await sendVolunteerApplicationNotification(application);
+    } catch (notificationError) {
+      console.error(
+        `Volunteer application ${application.id} was saved but its notification email failed:`,
+        notificationError,
+      );
+    }
 
     return res.status(201).json({
       message: "Volunteer application submitted successfully",
