@@ -15,6 +15,8 @@ app.set("trust proxy", 1);
 const normalizeOrigin = (origin) => origin.trim().replace(/\/$/, "");
 const allowedOrigins = new Set([
     "http://localhost:5173",
+    "https://wesupporther.org",
+    "https://www.wesupporther.org",
     ...(process.env.FRONTEND_URL || "").split(","),
 ].map(normalizeOrigin).filter(Boolean));
 
