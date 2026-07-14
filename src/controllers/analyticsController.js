@@ -19,6 +19,12 @@ export const getAnalytics = async (req, res) => {
       });
     }
 
+    if (error?.code === 7) {
+      return res.status(502).json({
+        message: "The Google Analytics service account does not have access to this GA4 property.",
+      });
+    }
+
     console.error("Failed to load Google Analytics reports:", error);
     return res.status(502).json({ message: "Unable to retrieve Google Analytics reports." });
   }

@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { buildVolunteerApplicationEmail } from "../templates/volunteerApplicationEmail.js";
+import { buildContactSubmissionEmail } from "../templates/contactSubmissionEmail.js";
 
 let resendClient;
 
@@ -41,5 +42,37 @@ export const sendVolunteerApplicationNotification = async (application) => {
     throw new Error(error.message || "Resend rejected the email request");
   }
 
+  return data;
+};
+
+export const sendContactSubmissionNotification = async (submission) => {
+  const resend = getResendClient();
+
+  if (!resend) {
+    console.warn("Contact email skipped: RESEND_API_KEY is not configured");
+    return { skipped: true };
+  }
+
+  const to = process.env.CONTACT_NOTIFICATION_EMAIL || "info@wesupporther.org";
+  const from = process.env.EMAIL_FROM || "We Support Her <notifications@wesupporther.org>";
+  const { html, text } = buildContactSubmissionEmail({
+    submission,
+    dashboardUrl: process.env.CONTACT_ADMIN_DASHBOARD_URL,
+    logoUrl: process.env.EMAIL_LOGO_URL,
+  });
+
+  const { data, error } = await resend.emails.send(
+    {
+      from,
+      to: [to],
+      replyTo: submission.email,
+      subject: `New contact message - ${submission.subject}`,
+      html,
+      text,
+    },
+    { idempotencyKey: `contact-submission/${submission.id}` },
+  );
+
+  if (error) throw new Error(error.message || "Resend rejected the email request");
   return data;
 };

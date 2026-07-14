@@ -118,3 +118,32 @@ model NewsletterSubscriber {
   @@index([status, subscribedAt])
   @@map("newsletter_subscribers")
 }
+
+enum ContactSubmissionStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+model ContactSubmission {
+  id Int @id @default(autoincrement())
+
+  fullName String @db.VarChar(120)
+  email    String @db.VarChar(254)
+  subject  String @db.VarChar(160)
+  message  String @db.Text
+
+  status ContactSubmissionStatus @default(NEW)
+
+  respondedAt DateTime?
+  archivedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+  @@map("contact_submissions")
+}
