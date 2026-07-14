@@ -12,6 +12,9 @@ import {
   listContactSubmissions,
   updateContactSubmissionStatus,
 } from "../controllers/contactController.js";
+import adminPostRoutes from "./adminPostRoutes.js";
+import postCategoryRoutes from "./postCategoryRoutes.js";
+import mediaRoutes from "./mediaRoutes.js";
 
 const router = express.Router();
 
@@ -25,5 +28,8 @@ router.get("/analytics", getAnalytics);
 router.get("/contact-submissions", listContactSubmissions);
 router.get("/contact-submissions/:id", getContactSubmission);
 router.patch("/contact-submissions/:id/status", updateContactSubmissionStatus);
+router.use("/posts", adminPostRoutes);
+router.use("/post-categories", postCategoryRoutes);
+router.use("/media", mediaRoutes);
 
 export default router;

@@ -6,6 +6,7 @@ import newsletterRoutes from "./routes/newsletterRoutes.js";
 import volunteerRoutes from "./routes/volunteerRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import publicPostRoutes from "./routes/publicPostRoutes.js";
 
 
 const app = express();
@@ -29,7 +30,7 @@ app.use(cors({
     },
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: "2mb" }));
 
 
 
@@ -42,6 +43,7 @@ app.use("/api/volunteer-applications", volunteerRoutes);
 app.use("/api/newsletter", newsletterRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api", contactRoutes);
+app.use("/api", publicPostRoutes);
 
 
 

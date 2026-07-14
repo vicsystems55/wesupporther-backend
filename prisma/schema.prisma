@@ -147,3 +147,53 @@ model ContactSubmission {
   @@index([email])
   @@map("contact_submissions")
 }
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+
+  title   String @db.VarChar(200)
+  slug    String @unique @db.VarChar(220)
+  excerpt String @db.Text
+  content String @db.LongText
+
+  featuredImage    String? @db.VarChar(2048)
+  featuredImageAlt String? @db.VarChar(255)
+
+  status     PostStatus @default(DRAFT)
+  isFeatured Boolean    @default(false)
+
+  categoryId Int?
+  category   PostCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  seoTitle       String? @db.VarChar(200)
+  seoDescription String? @db.VarChar(320)
+
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status])
+  @@index([categoryId])
+  @@index([publishedAt])
+  @@map("posts")
+}
+
+model PostCategory {
+  id Int @id @default(autoincrement())
+
+  name        String  @db.VarChar(120)
+  slug        String  @unique @db.VarChar(140)
+  description String? @db.Text
+
+  posts Post[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("post_categories")
+}
